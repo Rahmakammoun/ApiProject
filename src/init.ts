@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize';
 import bcrypt from 'bcryptjs';
-import User from './models/user'; // Assurez-vous que le chemin est correct
+import User from './models/user'; 
 
 const initializeDatabase = async () => {
   const sequelize = new Sequelize({
@@ -12,16 +12,16 @@ const initializeDatabase = async () => {
   });
 
   try {
-    // Synchroniser les modèles avec la base de données
+   
     await sequelize.sync();
 
-    // Vérifier si l'admin existe déjà
+   
     const adminExists = await User.findOne({
       where: { email: process.env.ADMIN_EMAIL }
     });
 
     if (!adminExists) {
-      // Créer un nouvel admin
+      
       const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD!, 10);
       await User.create({
         email: process.env.ADMIN_EMAIL,
