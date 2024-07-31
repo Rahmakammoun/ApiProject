@@ -25,7 +25,7 @@ const login = async (req: Request, res: Response) => {
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET!,
-      { expiresIn: '1h' }
+      { expiresIn: '24h' }
     );
 
     return res.json({ message: 'Admin login successfully', token });
