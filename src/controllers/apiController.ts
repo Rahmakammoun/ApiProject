@@ -38,7 +38,7 @@ export const executeAdminApi = async (req: Request, res: ExpressResponse) => {
       return res.status(404).json({ message: 'API not found' });
     }
 
-    // Normaliser et mapper les paramètres
+   
     const normalizedParams = JSON.stringify(normalizeAndMapParams(params));
 
    
@@ -48,7 +48,7 @@ export const executeAdminApi = async (req: Request, res: ExpressResponse) => {
       return res.status(404).json({ message: 'Response not found for this API' });
     }
 
-    // Retourner la réponse de l'API
+   
     return res.status(200).json({
       apiResponse: JSON.parse(response.data)
     });
