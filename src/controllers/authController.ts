@@ -17,7 +17,7 @@ const login = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-   
+    // Check if user is admin
     if (user.role !== 'admin') {
       return res.status(403).json({ message: 'You are not authorized to login' });
     }

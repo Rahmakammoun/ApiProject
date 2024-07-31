@@ -43,11 +43,11 @@ export const fetchAndSaveApis = async (req: Request, res: ExpressResponse) => {
 
     for (const api of apiEndpoints) {
       try {
-       
+        // Construct the URL with placeholders
         let apiUrl = api.url;
         let paramNames = '';
 
-   
+        // Extract parameters from the URL
         const urlParts = api.url.split('/');
         const placeholders = urlParts.filter(part => part.startsWith('{')).map(part => part.replace(/[{}]/g, ''));
 
@@ -65,7 +65,7 @@ export const fetchAndSaveApis = async (req: Request, res: ExpressResponse) => {
        
         const normalizedParams = JSON.stringify(normalizeParams(params));
 
-       
+        // Fetch data from the dynamically constructed API endpoint
         const response = await axios.get(apiUrl);
         const apiData = response.data;
 
@@ -93,7 +93,7 @@ export const fetchAndSaveApis = async (req: Request, res: ExpressResponse) => {
 
           console.log('Saved Response:', savedResponse); 
         } else {
-         
+          // If API exists, check if the response with the same category already exists
           const existingResponse = await ResponseModel.findOne({
             where: { apiId: existingApi.id, params: normalizedParams }
           });
