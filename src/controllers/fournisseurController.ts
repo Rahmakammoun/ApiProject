@@ -4,7 +4,7 @@ import Api from '../models/api';
 import ResponseModel from '../models/response';
 import jwt from 'jsonwebtoken';
 
-// Liste des noms d'API possibles avec leurs URL (API Statique) 
+// Liste des noms d'API possibles avec leurs URL 
 const apiEndpoints = [
   { name: 'getProductById', url: 'https://fakestoreapi.com/products/{id}' },
   { name: 'getProductsList', url: 'https://fakestoreapi.com/products' },
@@ -13,12 +13,12 @@ const apiEndpoints = [
   { name: 'getProductDetails', url: 'https://fakestoreapi.com/products/{id}' }
 ];
 
-// Définir le type de params
+
 interface Params {
   [key: string]: string;
 }
 
-// Fonction pour normaliser les clés des paramètres
+
 const normalizeParams = (params: Params) => {
   const normalized: Params = {};
   for (const key in params) {
@@ -43,15 +43,15 @@ export const fetchAndSaveApis = async (req: Request, res: ExpressResponse) => {
 
     for (const api of apiEndpoints) {
       try {
-        // Construct the URL with placeholders
+       
         let apiUrl = api.url;
         let paramNames = '';
 
-        // Extract parameters from the URL
+   
         const urlParts = api.url.split('/');
         const placeholders = urlParts.filter(part => part.startsWith('{')).map(part => part.replace(/[{}]/g, ''));
 
-        // Replace placeholders with values from request body
+       
         const params: Params = {};
         for (const paramName of placeholders) {
           const paramValue = req.body[paramName] ;
@@ -60,12 +60,12 @@ export const fetchAndSaveApis = async (req: Request, res: ExpressResponse) => {
           paramNames += paramName + ',';
         }
 
-        paramNames = paramNames.slice(0, -1); // Remove trailing comma
+        paramNames = paramNames.slice(0, -1); 
 
-        // Normalize parameters
+       
         const normalizedParams = JSON.stringify(normalizeParams(params));
 
-        // Fetch data from the dynamically constructed API endpoint
+       
         const response = await axios.get(apiUrl);
         const apiData = response.data;
 
@@ -73,17 +73,17 @@ export const fetchAndSaveApis = async (req: Request, res: ExpressResponse) => {
           where: { name: api.name, endPoint: api.url }
         });
 
-        // Save the API if it does not already exist
+        
         if (!existingApi) {
           const savedApi = await Api.create({
             name: api.name,
             endPoint: api.url,
             method: 'GET',
-            params: paramNames, // Save only the names of parameters
+            params: paramNames, 
             userId: decoded.id
           });
 
-          console.log('Saved API:', savedApi); // Log the saved API
+          console.log('Saved API:', savedApi); 
 
           const savedResponse = await ResponseModel.create({
             apiId: savedApi.id,
@@ -91,9 +91,9 @@ export const fetchAndSaveApis = async (req: Request, res: ExpressResponse) => {
             params: normalizedParams
           });
 
-          console.log('Saved Response:', savedResponse); // Log the saved response
+          console.log('Saved Response:', savedResponse); 
         } else {
-          // If API exists, check if the response with the same category already exists
+         
           const existingResponse = await ResponseModel.findOne({
             where: { apiId: existingApi.id, params: normalizedParams }
           });
@@ -105,7 +105,7 @@ export const fetchAndSaveApis = async (req: Request, res: ExpressResponse) => {
               params: normalizedParams
             });
 
-            console.log('Saved Response:', savedResponse); // Log the saved response
+            console.log('Saved Response:', savedResponse); 
           }
         }
       } catch (apiError) {

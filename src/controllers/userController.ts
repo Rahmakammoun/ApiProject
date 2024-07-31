@@ -41,7 +41,7 @@ export const createFournisseur = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
-    // Vérifier si l'utilisateur est admin
+  
     const token = req.header('Authorization')?.split(' ')[1];
     if (!token) {
       return res.status(401).json({ message: 'Access denied' });
@@ -52,10 +52,10 @@ export const createFournisseur = async (req: Request, res: Response) => {
       return res.status(403).json({ message: 'You are not authorized to create fournisseur' });
     }
 
-    // Hacher le mot de passe
+ 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Créer un nouveau fournisseur
+   
     const fournisseur = await User.create({
       email,
       password: hashedPassword,
@@ -82,7 +82,7 @@ export const loginFournisseur = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    // Check if user is fournisseur
+   
     if (user.role !== 'fournisseur') {
       return res.status(403).json({ message: 'You are not authorized to login as fournisseur' });
     }
